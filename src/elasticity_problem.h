@@ -131,6 +131,11 @@ problem(std::shared_ptr<dolfinx::mesh::Mesh> mesh)
 
   t1.stop();
 
+  dolfinx::la::PETScMatrix A2 = dolfinx::fem::create_matrix(*a);
+  dolfinx::fem::assemble_matrix(A2.mat(), *a, {});
+  MatAssemblyBegin(A2.mat(), MAT_FINAL_ASSEMBLY);
+  MatAssemblyEnd(A2.mat(), MAT_FINAL_ASSEMBLY);
+
   // Create matrices and vector, and assemble system
   dolfinx::la::PETScMatrix A = dolfinx::fem::create_matrix(*a);
   dolfinx::la::PETScVector b(*L->function_space(0)->dofmap()->index_map);
@@ -165,6 +170,16 @@ problem(std::shared_ptr<dolfinx::mesh::Mesh> mesh)
   dolfinx::la::VectorSpaceBasis nullspace = build_near_nullspace(*V);
   A.set_near_nullspace(nullspace);
   t4.stop();
+
+  // Create PETSc nullspace
+  MatNullSpace petsc_ns
+      = dolfinx::la::create_petsc_nullspace(mesh->mpi_comm(), nullspace);
+  PetscBool isNull;
+  MatNullSpaceTest(petsc_ns, A2.mat(), &isNull);
+  if (isNull == PETSC_TRUE)
+    std::cout << "Is a nullspace: " << isNull << std::endl;
+  else
+    std::cout << "Not a nullspace: " << isNull << std::endl;
 
   return std::tuple<dolfinx::la::PETScMatrix, dolfinx::la::PETScVector,
                     std::shared_ptr<dolfinx::function::Function>>(
