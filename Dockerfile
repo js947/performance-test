@@ -15,8 +15,6 @@ ENV OPENBLAS_NUM_THREADS=1
 
 # Non-Python utilities and libraries
 RUN apt-get -qq update && \
-    apt-get -y --with-new-pkgs \
-    -o Dpkg::Options::="--force-confold" upgrade && \
     apt-get -y install \
     bison \
     clang \
