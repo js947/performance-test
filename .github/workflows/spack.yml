@@ -19,13 +19,15 @@ jobs:
           path: ./spack
           repository: js947/spack
           ref: add-fenics-x
-      - run: source spack/share/spack/setup-env.sh
-      - run: spack activate -d .
-      - run: spack install
+      - run: echo "::add-path::$(realpath spack/bin)"
+      - run: |
+          spack env activate -d .
+          spack install
 
       - uses: actions/checkout@v2
       - name: build performance-test
         run: |
+          spack env activate -d .
           mkdir build
           cd build
           cmake ../src
@@ -33,8 +35,7 @@ jobs:
 
       - name: Run Poisson test (BoomerAMG, serial)
         run: |
-          cd build/
-          ./dolfinx-scaling-test \
+          build/dolfinx-scaling-test \
           --problem_type poisson \
           --scaling_type weak \
           --ndofs 50000 \
@@ -48,8 +49,7 @@ jobs:
 
       - name: Run elasticity test (GAMG, serial)
         run: |
-          cd build/
-          ./dolfinx-scaling-test \
+          build/dolfinx-scaling-test \
           --problem_type elasticity \
           --scaling_type weak \
           --ndofs 100000 \
