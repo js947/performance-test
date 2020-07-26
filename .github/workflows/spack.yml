@@ -13,19 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: get spack
+      - uses: actions/checkout@v2
+      - name: Get spack
         uses: actions/checkout@v2
         with:
           path: ./spack
           repository: js947/spack
           ref: add-fenics-x
-      - run: |
+
+      - name: Install dependencies with spack
+        run: |
           source spack/share/spack/setup-env.sh
           spack env activate -d .
           spack install
 
-      - uses: actions/checkout@v2
-      - name: build performance-test
+      - name: Build performance-test
         run: |
           source spack/share/spack/setup-env.sh
           spack env activate -d .
