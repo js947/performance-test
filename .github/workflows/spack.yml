@@ -19,14 +19,15 @@ jobs:
           path: ./spack
           repository: js947/spack
           ref: add-fenics-x
-      - run: echo "::add-path::$(realpath spack/bin)"
       - run: |
+          source spack/share/spack/setup-env.sh
           spack env activate -d .
           spack install
 
       - uses: actions/checkout@v2
       - name: build performance-test
         run: |
+          source spack/share/spack/setup-env.sh
           spack env activate -d .
           mkdir build
           cd build
