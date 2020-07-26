@@ -1,4 +1,4 @@
-name: FEniCS Performance Test CI
+name: Test spack build
 
 on:
   push:
