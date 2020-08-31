@@ -18,19 +18,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: ./spack
-          repository: js947/spack
-          ref: add-fenics-x
+          repository: spack/spack
+          ref: develop
 
-      - name: Install dependencies with spack
+      - name: Install dependencies
         run: |
           source spack/share/spack/setup-env.sh
-          spack env activate -d .
-          spack install
+          spack install fenics-dolfinx
 
       - name: Build performance-test
         run: |
           source spack/share/spack/setup-env.sh
-          spack env activate -d .
+          spack load fenics-dolfinx
           mkdir build
           cd build
           cmake ../src
