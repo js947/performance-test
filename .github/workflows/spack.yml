@@ -38,7 +38,7 @@ jobs:
       - name: Run Poisson test (BoomerAMG, serial)
         run: |
           source spack/share/spack/setup-env.sh
-          spack env activate -d .
+          spack load fenics-dolfinx
           build/dolfinx-scaling-test \
           --problem_type poisson \
           --scaling_type weak \
@@ -54,7 +54,7 @@ jobs:
       - name: Run elasticity test (GAMG, serial)
         run: |
           source spack/share/spack/setup-env.sh
-          spack env activate -d .
+          spack load fenics-dolfinx
           build/dolfinx-scaling-test \
           --problem_type elasticity \
           --scaling_type weak \
